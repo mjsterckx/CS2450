@@ -49,20 +49,15 @@ double getMaxAbsolute(double myArray[], int numItems)
 int countInverses(int myArray[], int numItems)
 {
     int pairs = 0;
-    int arrayCopy[numItems];
-    for (int i = 0; i < numItems; i++)
-    {
-        arrayCopy[i] = myArray[i];
-    }
     for (int i = 0; i < numItems; i++)
     {
         for (int j = i + 1; j < numItems; j++)
         {
-            if (arrayCopy[i] != 0 && arrayCopy[j] != 0 && arrayCopy[i] + arrayCopy[j] == 0)
+            if (myArray[i] != 0 && myArray[j] != 0 && myArray[i] + myArray[j] == 0)
             {
                 pairs++;
-                arrayCopy[i] = 0;
-                arrayCopy[j] = 0;
+                myArray[i] = 0;
+                myArray[j] = 0;
             }
         }
     }
