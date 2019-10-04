@@ -4,7 +4,7 @@ double getPositiveAverage(double myArray[], int numItems)
     double sum = 0;
     for (int i = 0; i < numItems; i++)
     {
-        sum += myArray[i];
+        if (myArray[i] > 0) sum += myArray[i];
     }
     return sum / numItems;
 }
