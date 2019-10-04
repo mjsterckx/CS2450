@@ -1,12 +1,17 @@
 double getPositiveAverage(double myArray[], int numItems)
 {
-    if (numItems <= 0) return 0;
     double sum = 0;
+    int positives = 0;
     for (int i = 0; i < numItems; i++)
     {
-        if (myArray[i] > 0) sum += myArray[i];
+        if (myArray[i] > 0)
+        {
+            sum += myArray[i];
+            positives++;
+        }
     }
-    return sum / numItems;
+    if (positives == 0) return 0;
+    return sum / positives;
 }
 
 int countRangeValues(double myArray[], int numItems, double toCount)
