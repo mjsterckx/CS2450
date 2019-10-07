@@ -19,10 +19,7 @@ int countRangeValues(double myArray[], int numItems, double toCount)
     int count = 0;
     double lowerBound = toCount - 0.5;
     double upperBound = toCount + 0.5;
-    for (int i = 0; i < numItems; i++)
-    {
-        if (myArray[i] >= lowerBound && myArray[i] < upperBound) count++;
-    }
+    for (int i = 0; i < numItems; i++) if (myArray[i] >= lowerBound && myArray[i] < upperBound) count++;
     return count;
 }
 
@@ -40,13 +37,7 @@ double getMaxAbsolute(double myArray[], int numItems)
                 maxAbsolute = -max;
             }
         }
-        else
-        {
-            if (myArray[i] >= maxAbsolute)
-            {
-                max = maxAbsolute = myArray[i];
-            }
-        }
+        else if (myArray[i] >= maxAbsolute) max = maxAbsolute = myArray[i];
     }
     return max;
 }
