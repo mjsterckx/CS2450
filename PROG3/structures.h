@@ -1,8 +1,13 @@
-//
-// Created by sterc on 10/11/2019.
-//
+#define TEXT_SIZE 80
+#define NUM_DVDS 4
 
-#ifndef CS2450_STRUCTURES_H
-#define CS2450_STRUCTURES_H
+typedef struct {
+    char title[TEXT_SIZE];
+    char director[TEXT_SIZE];
+    int playTime;
+} dvd_t;
 
-#endif //CS2450_STRUCTURES_H
+void getOneDVD(dvd_t *dvd);
+void printOneDVD(dvd_t);
+void getCollection(dvd_t[], int);
+void printCollection(dvd_t[], int);
