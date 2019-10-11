@@ -13,6 +13,7 @@ void getOneDVD(dvd_t *dvd)
     scanf("%c", &c);
     printf("Enter play time in minutes: ");
     scanf("%d", &dvd->playTime);
+    scanf("%c", &c);
 }
 
 void printOneDVD(dvd_t dvd)
