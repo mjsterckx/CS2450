@@ -7,7 +7,7 @@ void printIP(int address)
 	second = (address >> 16) & 0x000000FF;
 	third = (address >> 8) & 0x000000FF;
 	fourth = address & 0x000000FF;
-	printf("%d.%d.%d.%d", first, second, third, fourth);
+	printf("%d.%d.%d.%d\n", first, second, third, fourth);
 }
 
 int reverseEndian(int number)
