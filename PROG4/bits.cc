@@ -27,17 +27,10 @@ int countGroups(int number)
 	int lastbit = 0;
 	for (int i = 0; i < 32; i++)
 	{
-		if (n % 2 == 0)
-		{
-			if (lastbit == 1) groups++;
-			lastbit = 0;
-		}
-		else
-		{
-			lastbit = 1;
-		}
+		if (n % 2 == 0 && lastbit == 1) groups++;
+		lastbit = n % 2;
 		n = n >> 1;
 	}
-	if (lastbit = 1) groups++;
+	if (lastbit == 1) groups++;
 	return groups;
 }
