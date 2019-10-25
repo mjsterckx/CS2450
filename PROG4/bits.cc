@@ -2,35 +2,23 @@
 
 void printIP(int address)
 {
-	int first, second, third, fourth;
-	first = address >> 24;
-	second = (address >> 16) & 0x000000FF;
-	third = (address >> 8) & 0x000000FF;
-	fourth = address & 0x000000FF;
-	printf("%d.%d.%d.%d\n", first, second, third, fourth);
+	printf("%d.%d.%d.%d\n", address >> 24, (address >> 16) & 255, (address >> 8) & 255, address & 255);
 }
 
 int reverseEndian(int number)
 {
-	int first, second, third, fourth;
-	first = number << 24;
-	second = (number << 8) & 0x00FF0000;
-	third = (number >> 8) & 0x0000FF00;
-	fourth = number >> 24;
-	return first + second + third + fourth;
+	return (number << 24) + ((number << 8) & 16711680) + ((number >> 8) & 65280) + (number >> 24);
 }
 
 int countGroups(int number)
 {
 	int groups = 0;
-	int n = number;
 	int lastbit = 0;
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < 33; i++)
 	{
-		if (n % 2 == 0 && lastbit != 0) groups++;
-		lastbit = n % 2;
-		n = n >> 1;
+		if ((number % 2 == 0 || i == 32) && lastbit != 0) groups++;
+		lastbit = number % 2;
+		number = number >> 1;
 	}
-	if (lastbit != 0) groups++;
 	return groups;
 }
