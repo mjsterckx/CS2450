@@ -9,6 +9,8 @@ void assemble(char[]);
 int findOrigin(FILE*);
 int firstPass(FILE*, int[], int);
 void printLabels(int[]);
+void toUpper(char*);
+char* removeSpaces(char*);
 
 //For part 2
 int getAdd(char[]);
@@ -62,53 +64,76 @@ void assemble(char filename[])
 
 int findOrigin(FILE *infile)
 {
-	//Each trip through the while loop will read the next line of infile
-	//into the line char array as a null terminated string.
-	char line[LINE_SIZE]; 
-	
-	//The variable lineCount keeps track of how many lines have been read.
-	//It is used to guard against infinite loops.  Don't remove anything
-	//that has to do with linecount.
+	char line[LINE_SIZE];
 	int lineCount = 0; //
-	
-	//For getting out of the while loop.
 	int done = 0;
-	
-	//For getting rid of the trailing newline
 	char c;
-	
-	//Read lines until EOF reached or LIMIT lines read.  Limit prevent infinite loop.
+	int origin = -1;
 	while (fscanf(infile, "%[^\n]s", line) != EOF && lineCount < LIMIT && !done)
 	{
 		lineCount++;
-		
-		fscanf(infile, "%c", &c);  //Get rid of extra newline.
-		
-		//At this point, line contains the next line of the ASM file.
-		//Put your code here for seeing if line is an origin.
-		//Options:
-		//	1. line is an origin (save value, set done = 1).  
-		//  2. line is a blank line (skip).
-		//  3. line is a comment (skip).
-		//  4. line is anything else (print error, set done = 1).
-
-		
-		
-		
-		
-		//Set the line to empty string for the next pass.
+		fscanf(infile, "%c", &c);
+		char* clean = removeSpaces(line);
+		toUpper(clean);
+        if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
+        {
+            char* orig = ".ORIG";
+            for (int i = 0; i < 5; i++)
+            {
+                if (clean[i] != orig[i])
+                {
+                    printf("ERROR 1: Missing origin directive. Origin must be first line in program.");
+                    return -1;
+                }
+            }
+            if (clean[5] == 'X')
+            {
+                char* p = &clean[6];
+                sscanf(p, "%x", &origin);
+            } else
+            {
+                char* p = &clean[6];
+                sscanf(p, "%d", &origin);
+            }
+            done = 1;
+        }
 		line[0] = 0;
 	}
-	
-	
-	//At this point you must decide if an origin was found or not.
-	//How you do this is up to you.
-	//If a good origin was found, check the size.  
-	//		if it is too big, print an error and return -1.
-	//      if it is not too big, return the value.
-	//If a good origin was NOT found, print the error message and return -1.
+	if (!done || origin == -1)
+    {
+        printf("ERROR 1: Missing origin directive. Origin must be first line in program.");
+        return -1;
+    }
+	if (origin > 0xFFFF)
+    {
+	    printf("ERROR 2: Bad origin address. Address too big for 16 bits.");
+	    return -1;
+    }
+	return origin;
+}
 
-	
+void toUpper(char *s)
+{
+    for (int i = 0; i < strlen(s); i++)
+    {
+        if (s[i] >= 'a' && s[i] <= 'z') s[i] = s[i] - 32;
+    }
+}
+
+char* removeSpaces(char *s)
+{
+    char* out = s;
+    int pos = 0;
+    for (int i = 0; i < strlen(s); i++)
+    {
+        if (s[i] != ' ' && s[i] != 9)
+        {
+            out[pos] = s[i];
+            pos++;
+        }
+    }
+    out[pos] = 0;
+    return out;
 }
 
 int firstPass(FILE *infile, int labels[], int lc)
