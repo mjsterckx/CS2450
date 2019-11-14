@@ -11,6 +11,7 @@ int firstPass(FILE*, int[], int);
 void printLabels(int[]);
 void toUpper(char*);
 char* removeSpaces(char*);
+int isValidInstruction(char*);
 
 //For part 2
 int getAdd(char[]);
@@ -138,19 +139,49 @@ char* removeSpaces(char *s)
 
 int firstPass(FILE *infile, int labels[], int lc)
 {
-	//Create a while loop similar to findOrigin.
-	//You can rewind if you want to but you shouldn't have to.
-	
-	//Read a line.
-		//If the line is a comment, a blank line or the .orig directive, don’t do anything.
-		//If the line is a label on a line by itself, save the lc to the labels array at the appropriate position.
-		//	For example, if L3, store the lc value in labels[3].
-		//If the line is a label followed by .fill, save the lc in labels AND increment lc.
-		//If the line is .end, return 0 for done with no error.
-		//If the end of file is reached before .end is found print the error and return -1.
-		//If the line is one of the allowed instructions (ADD, AND, NOT, LD, LDR, ST, STR, BR, and TRAP) increment the lc.
-		//If the line is anything else print the unknown instruction error and return -1.
+    char line[LINE_SIZE];
+    int lineCount = 0; //
+    char c;
+    rewind(infile);
+    while (fscanf(infile, "%[^\n]s", line) != EOF && lineCount < LIMIT)
+    {
+        lineCount++;
+        fscanf(infile, "%c", &c);
+        char* clean = removeSpaces(line);
+        toUpper(clean);
+        if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
+        {
+            if (clean[0] == '.')
+            {
+                char *end = ".END";
+                int isEnd = 0;
+                for (int i = 0; i < 4; i++) {
+                    if (clean[i] != end[i]) isEnd++;
+                }
+                if (isEnd == 4) return 0;
+            } else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9')
+            {
+                if (clean[2] == 0 || clean[2] == '\n')
+                {
+                    int p = clean[3] - 48;
+                    labels[p] = lc;
+                } else if (clean[2] == '.' || isValidInstruction(&clean[6]))
+                {
+                    int p = clean[3] - 48;
+                    labels[p] = lc;
+                    lc++;
+                }
+            }
+        }
+        line[0] = 0;
+    }
+    printf("ERROR 4: Missing end directive.");
+    return -1;
+}
 
+int isValidInstruction(char* line)
+{
+    return 0;
 }
 
 
