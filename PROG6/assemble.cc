@@ -79,7 +79,7 @@ int findOrigin(FILE *infile)
 		toUpper(clean);
         if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
         {
-            char* orig = ".ORIG";
+            char orig[] = ".ORIG";
             for (int i = 0; i < 5; i++)
             {
                 if (clean[i] != orig[i])
@@ -116,7 +116,7 @@ int findOrigin(FILE *infile)
 
 void toUpper(char *s)
 {
-    for (int i = 0; i < strlen(s); i++)
+    for (unsigned int i = 0; i < strlen(s); i++)
     {
         if (s[i] >= 'a' && s[i] <= 'z') s[i] = s[i] - 32;
     }
@@ -126,7 +126,7 @@ char* removeSpaces(char *s)
 {
     char* out = s;
     int pos = 0;
-    for (int i = 0; i < strlen(s); i++)
+    for (unsigned int i = 0; i < strlen(s); i++)
     {
         if (s[i] != ' ' && s[i] != 9)
         {
@@ -154,7 +154,7 @@ int firstPass(FILE *infile, int labels[], int lc)
         {
             if (clean[0] == '.')
             {
-                char *end = ".END";
+                char end[] = ".END";
                 int isEnd = 0;
                 for (int i = 0; i < 4; i++) {
                     if (clean[i] != end[i]) isEnd++;
