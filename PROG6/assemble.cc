@@ -12,6 +12,7 @@ void printLabels(int[]);
 void toUpper(char*);
 char* removeSpaces(char*);
 int isValidInstruction(char*);
+void printLabels(int*);
 
 //For part 2
 int getAdd(char[]);
@@ -44,7 +45,7 @@ void assemble(char filename[])
 			if (!firstPass(infile, labels, lc))
 			{
 				//Show the labels.
-				printLabels();
+				printLabels(labels);
 				
 				//The following is for part 2
 				//secondPass(infile, labels, lc);
@@ -171,6 +172,13 @@ int firstPass(FILE *infile, int labels[], int lc)
                     labels[p] = lc;
                     lc++;
                 }
+            } else if (isValidInstruction(clean))
+            {
+                lc++;
+            } else
+            {
+                printf("ERROR 3: Unknown instruction.");
+                return -1;
             }
         }
         line[0] = 0;
@@ -181,7 +189,16 @@ int firstPass(FILE *infile, int labels[], int lc)
 
 int isValidInstruction(char* line)
 {
+    if (line[0] == 'A' && (line[1] == 'D' || line[1] == 'N') && line[2] == 'D') return 1;
+    if (line[0] == 'B' && line[1] == 'R' && (line[2] == 'N' || line[2] == 'Z' || line[2] == 'P' || line[2] == '\n' || line[2] == 0)) return 1;
+    if (line[0] == 'L' && line[1] == 'D') return 1;
+    if (line[0] == 'N' && line[1] == 'O' && line[2] == 'T') return 1;
+    if (line[0] == 'S' && line[1] == 'T') return 1;
+    if (line[0] == 'T' && line[1] == 'R' && line[2] == 'A' && line[3] == 'P') return 1;
     return 0;
 }
 
-
+void printLabels(int* l)
+{
+    printf("labels = {%d, %d, %d, %d, %d, %d, %d, %d, %d, %d}\n", l[0], l[1], l[2], l[3], l[4], l[5], l[6], l[7], l[8], l[9]);
+}
