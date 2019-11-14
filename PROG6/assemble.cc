@@ -77,6 +77,7 @@ int findOrigin(FILE *infile)
 		fscanf(infile, "%c", &c);
 		char* clean = removeSpaces(line);
 		toUpper(clean);
+		printf(clean);
         if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
         {
             char orig[] = ".ORIG";
