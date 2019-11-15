@@ -77,7 +77,6 @@ int findOrigin(FILE *infile)
 		fscanf(infile, "%c", &c);
 		char* clean = removeSpaces(line);
 		toUpper(clean);
-		printf(clean);
         if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
         {
             char orig[] = ".ORIG";
@@ -85,7 +84,7 @@ int findOrigin(FILE *infile)
             {
                 if (clean[i] != orig[i])
                 {
-                    printf("ERROR 1: Missing origin directive. Origin must be first line in program.");
+                    printf("ERROR 1: Missing origin directive. Origin must be first line in program.\n");
                     return -1;
                 }
             }
@@ -104,12 +103,12 @@ int findOrigin(FILE *infile)
 	}
 	if (!done || origin == -1)
     {
-        printf("ERROR 1: Missing origin directive. Origin must be first line in program.");
+        printf("ERROR 1: Missing origin directive. Origin must be first line in program.\n");
         return -1;
     }
 	if (origin > 0xFFFF)
     {
-	    printf("ERROR 2: Bad origin address. Address too big for 16 bits.");
+	    printf("ERROR 2: Bad origin address. Address too big for 16 bits.\n");
 	    return -1;
     }
 	return origin;
@@ -178,13 +177,13 @@ int firstPass(FILE *infile, int labels[], int lc)
                 lc++;
             } else
             {
-                printf("ERROR 3: Unknown instruction.");
+                printf("ERROR 3: Unknown instruction.\n");
                 return -1;
             }
         }
         line[0] = 0;
     }
-    printf("ERROR 4: Missing end directive.");
+    printf("ERROR 4: Missing end directive.\n");
     return -1;
 }
 
