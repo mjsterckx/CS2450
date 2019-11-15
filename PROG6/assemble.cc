@@ -67,7 +67,8 @@ void assemble(char filename[])
 int findOrigin(FILE *infile)
 {
 	char line[LINE_SIZE];
-	int lineCount = 0; //
+	line[0] = 0;
+	int lineCount = 0;
 	int done = 0;
 	char c;
 	int origin = -1;
@@ -77,7 +78,7 @@ int findOrigin(FILE *infile)
 		fscanf(infile, "%c", &c);
 		char* clean = removeSpaces(line);
 		toUpper(clean);
-        if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
+        if (clean[0] == '.' || (clean[0] >= 'A' && clean[0] <= 'Z'))
         {
             char orig[] = ".ORIG";
             for (int i = 0; i < 5; i++)
@@ -141,6 +142,7 @@ char* removeSpaces(char *s)
 int firstPass(FILE *infile, int labels[], int lc)
 {
     char line[LINE_SIZE];
+    line[0] = 0;
     int lineCount = 0; //
     char c;
     rewind(infile);
@@ -150,25 +152,25 @@ int firstPass(FILE *infile, int labels[], int lc)
         fscanf(infile, "%c", &c);
         char* clean = removeSpaces(line);
         toUpper(clean);
-        if (clean[0] != ';' && clean[0] != '\n' && clean[0] != 0)
+        if (clean[0] == '.' || (clean[0] >= 'A' && clean[0] <= 'Z'))
         {
             if (clean[0] == '.')
             {
                 char end[] = ".END";
                 int isEnd = 0;
                 for (int i = 0; i < 4; i++) {
-                    if (clean[i] != end[i]) isEnd++;
+                    if (clean[i] == end[i]) isEnd++;
                 }
                 if (isEnd == 4) return 0;
             } else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9')
             {
                 if (clean[2] == 0 || clean[2] == '\n')
                 {
-                    int p = clean[3] - 48;
+                    int p = clean[1] - 48;
                     labels[p] = lc;
                 } else if (clean[2] == '.' || isValidInstruction(&clean[6]))
                 {
-                    int p = clean[3] - 48;
+                    int p = clean[1] - 48;
                     labels[p] = lc;
                     lc++;
                 }
@@ -190,7 +192,7 @@ int firstPass(FILE *infile, int labels[], int lc)
 int isValidInstruction(char* line)
 {
     if (line[0] == 'A' && (line[1] == 'D' || line[1] == 'N') && line[2] == 'D') return 1;
-    if (line[0] == 'B' && line[1] == 'R' && (line[2] == 'N' || line[2] == 'Z' || line[2] == 'P' || line[2] == '\n' || line[2] == 0)) return 1;
+    if (line[0] == 'B' && line[1] == 'R' && (line[2] == 'N' || line[2] == 'Z' || line[2] == 'P' || line[2] == 'L' || line[2] == '\n' || line[2] == 0)) return 1;
     if (line[0] == 'L' && line[1] == 'D') return 1;
     if (line[0] == 'N' && line[1] == 'O' && line[2] == 'T') return 1;
     if (line[0] == 'S' && line[1] == 'T') return 1;
