@@ -95,7 +95,7 @@ int findOrigin(FILE *infile)
                 sscanf(p, "%x", &origin);
             } else
             {
-                char* p = &clean[6];
+                char* p = &clean[5];
                 sscanf(p, "%d", &origin);
             }
             done = 1;
