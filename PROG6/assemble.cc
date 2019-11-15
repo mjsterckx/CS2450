@@ -128,7 +128,7 @@ char* removeSpaces(char *s)
     int pos = 0;
     for (unsigned int i = 0; i < strlen(s); i++)
     {
-        if (s[i] != ' ' && s[i] != 9)
+        if (s[i] != ' ' && s[i] != '\t' && s[i] != '\r' && s[i] != '\n')
         {
             out[pos] = s[i];
             pos++;
