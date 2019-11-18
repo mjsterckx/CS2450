@@ -12,7 +12,6 @@ void printLabels(int[]);
 void toUpper(char*);
 char* removeSpaces(char*);
 int isValidInstruction(char*);
-void printLabels(int*);
 
 //For part 2
 int getAdd(char[]);
@@ -24,7 +23,6 @@ int getLdr(char[]);
 int getSt(char[], int[], int);
 int getStr(char[]);
 int getBr(char[], int[], int);
-int getIt(int, char[]);
 int secondPass(FILE*, int[], int);
 
 void assemble(char filename[])
@@ -45,10 +43,10 @@ void assemble(char filename[])
 			if (!firstPass(infile, labels, lc))
 			{
 				//Show the labels.
-				printLabels(labels);
+				//printLabels(labels);
 				
 				//The following is for part 2
-				//secondPass(infile, labels, lc);
+				secondPass(infile, labels, lc);
 			}
 		}
 		
@@ -62,7 +60,6 @@ void assemble(char filename[])
 	}    
 
 }
-
 
 int findOrigin(FILE *infile)
 {
@@ -143,7 +140,7 @@ int firstPass(FILE *infile, int labels[], int lc)
 {
     char line[LINE_SIZE];
     line[0] = 0;
-    int lineCount = 0; //
+    int lineCount = 0;
     char c;
     rewind(infile);
     while (fscanf(infile, "%[^\n]s", line) != EOF && lineCount < LIMIT)
@@ -200,7 +197,144 @@ int isValidInstruction(char* line)
     return 0;
 }
 
-void printLabels(int* l)
+void printLabels(int l[])
 {
     printf("labels = {%d, %d, %d, %d, %d, %d, %d, %d, %d, %d}\n", l[0], l[1], l[2], l[3], l[4], l[5], l[6], l[7], l[8], l[9]);
+}
+
+int secondPass(FILE *infile, int labels[], int lc)
+{
+    char line[LINE_SIZE];
+    line[0] = 0;
+    int lineCount = 0;
+    char c;
+    rewind(infile);
+    while (fscanf(infile, "%[^\n]s", line) != EOF && lineCount < LIMIT)
+    {
+        lineCount++;
+        fscanf(infile, "%c", &c);
+        char* clean = removeSpaces(line);
+        toUpper(clean);
+        if (clean[0] == '.' || (clean[0] >= 'A' && clean[0] <= 'Z'))
+        {
+            if (strncmp(clean, ".END", 4)) return 0;
+            else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9' && clean[2] == '.')
+            {
+                printf("0000");
+                lc++;
+            } else if (isValidInstruction(clean))
+            {
+                if (strncmp(clean, "ADD", 3)) printf("%X", getAdd(clean));
+                else if (strncmp(clean, "AND", 3)) printf("%X", getAnd(clean));
+                else if (strncmp(clean, "NOT", 3)) printf("%X", getNot(clean));
+                else if (strncmp(clean, "LDR", 3)) printf("%X", getLdr(clean));
+                else if (strncmp(clean, "LD", 2)) printf("%X", getLd(clean, labels, lc));
+                else if (strncmp(clean, "STR", 3)) printf("%X", getStr(clean));
+                else if (strncmp(clean, "ST", 2)) printf("%X", getSt(clean, labels, lc));
+                else if (strncmp(clean, "BR", 2)) printf("%X", getBr(clean, labels, lc));
+                else if (strncmp(clean, "TRAP", 4)) printf("%X", getTrap(clean));
+                lc++;
+            } else return -1;
+        }
+        line[0] = 0;
+    }
+    return -1;
+}
+
+int getAdd(char line[])
+{
+    int instruction = 0x1000;
+    int R1 = line[4];
+    int R2 = line[7];
+    instruction += (R1 << 9);
+    instruction += (R2 << 6);
+    if (line[9] == '#')
+    {
+        instruction |= 0x0020;
+        int value;
+        instruction |= sscanf(&line[10], "%d", &value);
+    } else
+    {
+        int R3 = line[10];
+        instruction += R3;
+    }
+    return instruction;
+}
+
+int getAnd(char line[])
+{
+    int instruction = 0x5000;
+    int R1 = line[4];
+    int R2 = line[7];
+    instruction += (R1 << 9);
+    instruction += (R2 << 6);
+    if (line[9] == '#')
+    {
+        instruction |= 0x0020;
+        int value;
+        instruction |= sscanf(&line[10], "%d", &value);
+    } else
+    {
+        int R3 = line[10];
+        instruction += R3;
+    }
+    return instruction;
+}
+
+int getTrap(char line[])
+{
+    int instruction = 0xF000;
+    int value;
+    instruction |= sscanf(&line[5], "%x", &value);
+    return instruction;
+}
+
+int getNot(char line[])
+{
+    int instruction = 0x9000;
+    int R1 = line[4];
+    int R2 = line[7];
+    instruction += (R1 << 9);
+    instruction += (R2 << 6);
+    instruction |= 0x003F;
+    return instruction;
+}
+
+int getLd(char line[], int labels[], int lc)
+{
+    return 0;
+}
+
+int getLdr(char line[])
+{
+    int instruction = 0x6000;
+    int R1 = line[4];
+    int R2 = line[7];
+    instruction += (R1 << 9);
+    instruction += (R2 << 6);
+    int value;
+    instruction |= sscanf(&line[10], "%d", &value);
+    return instruction;
+}
+
+int getSt(char line[], int labels[], int lc)
+{
+    return 0;
+}
+
+int getStr(char line[])
+{
+    int instruction = 0x7000;
+    int R1 = line[4];
+    int R2 = line[7];
+    instruction += (R1 << 9);
+    instruction += (R2 << 6);
+    int value;
+    instruction |= sscanf(&line[10], "%d", &value);
+    return instruction;
+}
+
+int getBr(char line[], int labels[], int lc)
+{
+    return 0;
 }
