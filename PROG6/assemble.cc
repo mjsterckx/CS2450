@@ -217,24 +217,26 @@ int secondPass(FILE *infile, int labels[], int lc)
         toUpper(clean);
         if (clean[0] == '.' || (clean[0] >= 'A' && clean[0] <= 'Z'))
         {
-            if (strncmp(clean, ".END", 4)) return 0;
-            else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9' && clean[2] == '.')
+            if (!strncmp(clean, ".END", 4))
+	    {
+		return 0;
+	    } else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9' && clean[2] == '.')
             {
-                printf("0000");
+                printf("0000\n");
                 lc++;
             } else if (isValidInstruction(clean))
             {
-                if (strncmp(clean, "ADD", 3)) printf("%X", getAdd(clean));
-                else if (strncmp(clean, "AND", 3)) printf("%X", getAnd(clean));
-                else if (strncmp(clean, "NOT", 3)) printf("%X", getNot(clean));
-                else if (strncmp(clean, "LDR", 3)) printf("%X", getLdr(clean));
-                else if (strncmp(clean, "LD", 2)) printf("%X", getLd(clean, labels, lc));
-                else if (strncmp(clean, "STR", 3)) printf("%X", getStr(clean));
-                else if (strncmp(clean, "ST", 2)) printf("%X", getSt(clean, labels, lc));
-                else if (strncmp(clean, "BR", 2)) printf("%X", getBr(clean, labels, lc));
-                else if (strncmp(clean, "TRAP", 4)) printf("%X", getTrap(clean));
+                if (!strncmp(clean, "ADD", 3)) printf("%X\n", getAdd(clean));
+                else if (!strncmp(clean, "AND", 3)) printf("%X\n", getAnd(clean));
+                else if (!strncmp(clean, "NOT", 3)) printf("%X\n", getNot(clean));
+                else if (!strncmp(clean, "LDR", 3)) printf("%X\n", getLdr(clean));
+                else if (!strncmp(clean, "LD", 2)) printf("%X\n", getLd(clean, labels, lc));
+                else if (!strncmp(clean, "STR", 3)) printf("%X\n", getStr(clean));
+                else if (!strncmp(clean, "ST", 2)) printf("%X\n", getSt(clean, labels, lc));
+                else if (!strncmp(clean, "BR", 2)) printf("%X\n", getBr(clean, labels, lc));
+                else if (!strncmp(clean, "TRAP", 4)) printf("%X\n", getTrap(clean));
                 lc++;
-            } else return -1;
+            };
         }
         line[0] = 0;
     }
