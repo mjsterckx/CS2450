@@ -232,10 +232,10 @@ int secondPass(FILE *infile, int labels[], int lc)
                 if (!strncmp(clean, "ADD", 3)) printf("%X\n", getAdd(clean));
                 else if (!strncmp(clean, "AND", 3)) printf("%X\n", getAnd(clean));
                 else if (!strncmp(clean, "NOT", 3)) printf("%X\n", getNot(clean));
-                else if (!strncmp(clean, "LDR", 3)) printf("%X\n", getLdr(clean));
-                else if (!strncmp(clean, "LD", 2)) printf("%X\n", getLd(clean, labels, lc));
-                else if (!strncmp(clean, "STR", 3)) printf("%X\n", getStr(clean));
-                else if (!strncmp(clean, "ST", 2)) printf("%X\n", getSt(clean, labels, lc));
+                else if (!strncmp(clean, "LDRR", 4)) printf("%X\n", getLdr(clean));
+                else if (!strncmp(clean, "LDR", 3)) printf("%X\n", getLd(clean, labels, lc));
+                else if (!strncmp(clean, "STRR", 4)) printf("%X\n", getStr(clean));
+                else if (!strncmp(clean, "STR", 3)) printf("%X\n", getSt(clean, labels, lc));
                 else if (!strncmp(clean, "BR", 2)) printf("%04X\n", getBr(clean, labels, lc));
                 else if (!strncmp(clean, "TRAP", 4)) printf("%X\n", getTrap(clean));
                 lc++;
