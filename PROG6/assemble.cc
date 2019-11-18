@@ -229,7 +229,7 @@ int secondPass(FILE *infile, int labels[], int lc)
                 lc++;
             } else if (isValidInstruction(clean))
             {
-                if (!strncmp(clean, "ADD", 3)) printf("%X\n", getAdd(clean));
+                if (!strncmp(clean, "ADD", 3)) printf("%04X\n", getAdd(clean));
                 else if (!strncmp(clean, "AND", 3)) printf("%X\n", getAnd(clean));
                 else if (!strncmp(clean, "NOT", 3)) printf("%X\n", getNot(clean));
                 else if (!strncmp(clean, "LDR", 3)) printf("%X\n", getLdr(clean));
@@ -316,7 +316,7 @@ int getLd(char line[], int labels[], int lc)
     int DR = line[3] - 48;
     instruction += (DR << 9);
     int label = line[6] - 48;
-    int offset = labels[label] - lc;
+    int offset = labels[label] - lc - 1;
     offset &= 0x01FF;
     return (instruction | offset);
 }
@@ -341,7 +341,7 @@ int getSt(char line[], int labels[], int lc)
     int SR = line[3] - 48;
     instruction += (SR << 9);
     int label = line[6] - 48;
-    int offset = labels[label] - lc;
+    int offset = labels[label] - lc - 1;
     offset &= 0x01FF;
     return (instruction | offset);
 }
@@ -371,7 +371,7 @@ int getBr(char line[], int labels[], int lc)
     instruction += cp << 9;
     char* l = strchr(line, 'L');
     int label = l[1] - 48;
-    int offset = labels[label] - lc;
+    int offset = labels[label] - lc - 1;
     offset &= 0x01FF;
     return instruction | offset;
 }
