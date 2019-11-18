@@ -244,8 +244,8 @@ int secondPass(FILE *infile, int labels[], int lc)
 int getAdd(char line[])
 {
     int instruction = 0x1000;
-    int R1 = line[4];
-    int R2 = line[7];
+    int R1 = line[4] - 48;
+    int R2 = line[7] - 48;
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     if (line[9] == '#')
@@ -255,7 +255,7 @@ int getAdd(char line[])
         instruction |= sscanf(&line[10], "%d", &value);
     } else
     {
-        int R3 = line[10];
+        int R3 = line[10] - 48;
         instruction += R3;
     }
     return instruction;
@@ -264,8 +264,8 @@ int getAdd(char line[])
 int getAnd(char line[])
 {
     int instruction = 0x5000;
-    int R1 = line[4];
-    int R2 = line[7];
+    int R1 = line[4] - 48;
+    int R2 = line[7] - 48;
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     if (line[9] == '#')
@@ -275,7 +275,7 @@ int getAnd(char line[])
         instruction |= sscanf(&line[10], "%d", &value);
     } else
     {
-        int R3 = line[10];
+        int R3 = line[10] - 48;
         instruction += R3;
     }
     return instruction;
@@ -292,8 +292,8 @@ int getTrap(char line[])
 int getNot(char line[])
 {
     int instruction = 0x9000;
-    int R1 = line[4];
-    int R2 = line[7];
+    int R1 = line[4] - 48;
+    int R2 = line[7] - 48;
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     instruction |= 0x003F;
@@ -308,8 +308,8 @@ int getLd(char line[], int labels[], int lc)
 int getLdr(char line[])
 {
     int instruction = 0x6000;
-    int R1 = line[4];
-    int R2 = line[7];
+    int R1 = line[4] - 48;
+    int R2 = line[7] - 48;
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     int value;
@@ -325,8 +325,8 @@ int getSt(char line[], int labels[], int lc)
 int getStr(char line[])
 {
     int instruction = 0x7000;
-    int R1 = line[4];
-    int R2 = line[7];
+    int R1 = line[4] - 48;
+    int R2 = line[7] - 48;
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     int value;
