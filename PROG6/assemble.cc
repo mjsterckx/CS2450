@@ -218,9 +218,12 @@ int secondPass(FILE *infile, int labels[], int lc)
         if (clean[0] == '.' || (clean[0] >= 'A' && clean[0] <= 'Z'))
         {
             if (!strncmp(clean, ".END", 4))
-	    {
-		return 0;
-	    } else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9' && clean[2] == '.')
+	        {
+		        return 0;
+	        } else if (!strncmp(clean, ".ORIG", 5))
+	        {
+                printf("%X", lc);
+            } else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9' && clean[2] == '.')
             {
                 printf("0000\n");
                 lc++;
@@ -254,7 +257,9 @@ int getAdd(char line[])
     {
         instruction |= 0x0020;
         int value;
-        instruction |= sscanf(&line[10], "%d", &value);
+        sscanf(&line[10], "%d", &value);
+        value &= 0x01F;
+        instruction |= value;
     } else
     {
         int R3 = line[10] - 48;
@@ -274,7 +279,9 @@ int getAnd(char line[])
     {
         instruction |= 0x0020;
         int value;
-        instruction |= sscanf(&line[10], "%d", &value);
+        sscanf(&line[10], "%d", &value);
+        value &= 0x01F;
+        instruction |= value;
     } else
     {
         int R3 = line[10] - 48;
@@ -286,9 +293,10 @@ int getAnd(char line[])
 int getTrap(char line[])
 {
     int instruction = 0xF000;
-    int value;
-    instruction |= sscanf(&line[5], "%x", &value);
-    return instruction;
+    int value = 0;
+    value += (line[5] - 48) * 16;
+    value += line[6] - 48;
+    return (instruction | value);
 }
 
 int getNot(char line[])
@@ -315,7 +323,9 @@ int getLdr(char line[])
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     int value;
-    instruction |= sscanf(&line[10], "%d", &value);
+    sscanf(&line[10], "%d", &value);
+    value &= 0x03F;
+    instruction |= value;
     return instruction;
 }
 
@@ -332,7 +342,9 @@ int getStr(char line[])
     instruction += (R1 << 9);
     instruction += (R2 << 6);
     int value;
-    instruction |= sscanf(&line[10], "%d", &value);
+    sscanf(&line[10], "%d", &value);
+    value &= 0x03F;
+    instruction |= value;
     return instruction;
 }
 
