@@ -312,7 +312,7 @@ int getNot(char line[])
 
 int getLd(char line[], int labels[], int lc)
 {
-    int instruction = 0x3000;
+    int instruction = 0x2000;
     int DR = line[3] - 48;
     instruction += (DR << 9);
     int label = line[6] - 48;
