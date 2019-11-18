@@ -222,7 +222,7 @@ int secondPass(FILE *infile, int labels[], int lc)
 		        return 0;
 	        } else if (!strncmp(clean, ".ORIG", 5))
 	        {
-                printf("%X", lc);
+                printf("%X\n", lc);
             } else if (clean[0] == 'L' && clean[1] >= '0' && clean[1] <= '9' && clean[2] == '.')
             {
                 printf("0000\n");
@@ -312,7 +312,13 @@ int getNot(char line[])
 
 int getLd(char line[], int labels[], int lc)
 {
-    return 0;
+    int instruction = 0x3000;
+    int DR = line[3] - 48;
+    instruction += (DR << 9);
+    int label = line[6] - 48;
+    int offset = labels[label] - lc;
+    offset &= 0x01FF;
+    return (instruction | offset);
 }
 
 int getLdr(char line[])
@@ -331,7 +337,13 @@ int getLdr(char line[])
 
 int getSt(char line[], int labels[], int lc)
 {
-    return 0;
+    int instruction = 0x3000;
+    int SR = line[3] - 48;
+    instruction += (SR << 9);
+    int label = line[6] - 48;
+    int offset = labels[label] - lc;
+    offset &= 0x01FF;
+    return (instruction | offset);
 }
 
 int getStr(char line[])
@@ -350,5 +362,16 @@ int getStr(char line[])
 
 int getBr(char line[], int labels[], int lc)
 {
-    return 0;
+    int instruction = 0x0000;
+    int cn = (!strchr(line, 'N') && line[2] != 'L' ? 0 : 1);
+    int cz = (!strchr(line, 'Z') && line[2] != 'L' ? 0 : 1);
+    int cp = (!strchr(line, 'P') && line[2] != 'L' ? 0 : 1);
+    instruction += cn << 11;
+    instruction += cz << 10;
+    instruction += cp << 9;
+    char* l = strchr(line, 'L');
+    int label = l[1] - 48;
+    int offset = labels[label] - lc;
+    offset &= 0x01FF;
+    return instruction | offset;
 }
